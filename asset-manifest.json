@@ -1,10 +1,14 @@
 {
   "files": {
-    "main.js": "//Gene4kaS.github.io/goit-react-hw-03-image-finder/static/js/main.9facc38e.js",
+    "main.css": "//Gene4kaS.github.io/goit-react-hw-03-image-finder/static/css/main.07316c00.css",
+    "main.js": "//Gene4kaS.github.io/goit-react-hw-03-image-finder/static/js/main.c9d05349.js",
     "index.html": "//Gene4kaS.github.io/goit-react-hw-03-image-finder/index.html",
-    "main.9facc38e.js.map": "//Gene4kaS.github.io/goit-react-hw-03-image-finder/static/js/main.9facc38e.js.map"
+    "static/media/searchicon.svg": "//Gene4kaS.github.io/goit-react-hw-03-image-finder/static/media/searchicon.8d3a96a7258e019ced53.svg",
+    "main.07316c00.css.map": "//Gene4kaS.github.io/goit-react-hw-03-image-finder/static/css/main.07316c00.css.map",
+    "main.c9d05349.js.map": "//Gene4kaS.github.io/goit-react-hw-03-image-finder/static/js/main.c9d05349.js.map"
   },
   "entrypoints": [
-    "static/js/main.9facc38e.js"
+    "static/css/main.07316c00.css",
+    "static/js/main.c9d05349.js"
   ]
 }
