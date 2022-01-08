@@ -13,7 +13,7 @@ export default class ImageGallery extends Component {
   render() {
     const { status, error, images, onLoadMore } = this.props;
     if (status === 'idle') {
-      return <div>Enter search query</div>;
+      return <div className={s.enter_query}>Enter search query</div>;
     }
     if (status === 'pending') {
       return Loader();
@@ -42,7 +42,7 @@ export default class ImageGallery extends Component {
         </>
       );
     } else {
-      return <div>We can't find it</div>;
+      return <div className={s.enter_query}>We can't find it</div>;
     }
   }
 }

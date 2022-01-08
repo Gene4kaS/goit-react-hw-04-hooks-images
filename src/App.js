@@ -61,6 +61,7 @@ export default class App extends Component {
 
   onOpenModal = (url, alt) => {
     this.setState({ largeImageURL: url, imageAlt: alt });
+
     this.toggleModal();
   };
 
@@ -74,6 +75,13 @@ export default class App extends Component {
 
     return (
       <div className={s.App}>
+        {showModal && (
+          <Modal
+            src={largeImageURL}
+            alt={imageAlt}
+            onCloseModal={this.toggleModal}
+          />
+        )}
         <Searchbar onSubmit={this.handleFormSubmit} />
         <ImageGallery
           status={status}
@@ -82,13 +90,7 @@ export default class App extends Component {
           onClick={this.onOpenModal}
           onLoadMore={this.onLoadMore}
         />
-        {showModal && (
-          <Modal
-            src={largeImageURL}
-            alt={imageAlt}
-            onCloseModal={this.toggleModal}
-          />
-        )}
+
         <ToastContainer />
       </div>
     );

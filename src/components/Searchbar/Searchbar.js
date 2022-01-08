@@ -13,13 +13,12 @@ export default class Searchbar extends Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    this.props.onSubmit(this.state.queryName);
 
     if (this.state.queryName.trim() === '') {
       toast.error('Type something to find');
       return;
     }
-
+    this.props.onSubmit(this.state.queryName);
     this.setState({ queryName: '' });
   };
 
