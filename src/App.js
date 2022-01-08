@@ -5,7 +5,7 @@ import ImageGallery from './components/ImageGallery';
 import Button from './components/Button';
 import Modal from './components/Modal';
 import Loader from './components/Loader';
-import Api from './components/Api';
+import api from './components/Api';
 
 import s from './App.module.css';
 import 'react-toastify/dist/ReactToastify.css';
@@ -48,7 +48,8 @@ export default class App extends Component {
 
   searchPic = () => {
     const { queryName, page } = this.state;
-    Api.fetchImages(queryName, page)
+    api
+      .fetchImages(queryName, page)
       .then(array =>
         this.setState(({ images, page }) => ({
           images: [...images, ...array],
@@ -81,15 +82,13 @@ export default class App extends Component {
     return (
       <div className={s.App}>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        {images.length > 0 && (
-          <ImageGallery
-            status={status}
-            images={images}
-            error={error}
-            onClick={this.onOpenModal}
-            onLoadMore={this.onLoadMore}
-          />
-        )}
+        <ImageGallery
+          status={status}
+          images={images}
+          error={error}
+          onClick={this.onOpenModal}
+          onLoadMore={this.onLoadMore}
+        />
         {showModal && (
           <Modal
             onClose={this.toggleModal}
