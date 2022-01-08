@@ -50,9 +50,9 @@ export default class App extends Component {
     const { queryName, page } = this.state;
     api
       .fetchImages(queryName, page)
-      .then(array =>
+      .then(res =>
         this.setState(({ images, page }) => ({
-          images: [...images, ...array],
+          images: [...images, ...res],
           status: 'resolved',
           page: page + 1,
         })),
@@ -70,10 +70,9 @@ export default class App extends Component {
     this.toggleModal();
   };
 
-  toggleModal = () =>
-    this.setState(({ showModal }) => ({
-      showModal: !showModal,
-    }));
+  toggleModal = () => {
+    this.setState(({ showModal }) => ({ showModal: !showModal }));
+  };
 
   render() {
     const { error, images, showModal, largeImageURL, imageAlt, status } =
@@ -84,14 +83,14 @@ export default class App extends Component {
         <Searchbar onSubmit={this.handleFormSubmit} />
         <ImageGallery
           status={status}
-          images={images}
           error={error}
+          images={images}
           onClick={this.onOpenModal}
           onLoadMore={this.onLoadMore}
         />
         {showModal && (
           <Modal
-            onClose={this.toggleModal}
+            onCloseModal={this.toggleModal}
             src={largeImageURL}
             alt={imageAlt}
           />
