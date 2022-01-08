@@ -1,12 +1,20 @@
 const API_KEY = '24210737-3b0bc435d65d70e1c06573fda';
 
-async function fetchImages(page, querry) {
-  const response = await fetch(
-    `https://pixabay.com/api/?q=${querry}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`,
-  );
-
-  const data = await response.json();
-  return data.hits;
+function fetchImages(page, queryName) {
+  return fetch(
+    `https://pixabay.com/api/?q=${queryName}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`,
+  )
+    .then(responce => {
+      if (responce.ok) {
+        return responce.json();
+      }
+      return Promise.reject(new Error(`Oh no... We cant find ${queryName}`));
+    })
+    .then(res => {
+      return res.hits;
+    });
 }
 
-export default fetchImages;
+const api = { fetchImages };
+
+export default api;

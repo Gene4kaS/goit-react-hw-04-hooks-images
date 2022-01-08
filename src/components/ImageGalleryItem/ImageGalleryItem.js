@@ -1,23 +1,31 @@
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import s from './ImageGalleryItem.module.css';
 
-const ImageGalleryItem = ({ picture }) => {
-  return (
-    <li className={s.ImageGalleryItem}>
-      <img
-        src={picture.webformatURL}
-        alt={picture.tags}
-        id={picture.id}
-        className={s.ImageGalleryItem_image}
-      />
-    </li>
-  );
-};
+export default class ImageGalleryItem extends Component {
+  handleImageClick = () => {
+    this.props.onClick(this.props.largeImageURL, this.props.tags);
+  };
 
-export default ImageGalleryItem;
+  render() {
+    const { id, webformatURL, tags } = this.props;
+    return (
+      <li className={s.ImageGalleryItem} key={id}>
+        <img
+          src={webformatURL}
+          alt={tags}
+          onClick={this.handleImageClick}
+          className={s.ImageGalleryItem_image}
+        />
+      </li>
+    );
+  }
+}
 
 ImageGalleryItem.propTypes = {
-  picture: PropTypes.object,
-  // key: PropTypes.number,
-  //   onClickPic: PropTypes.func,
+  id: PropTypes.number.isRequired,
+  tags: PropTypes.string.isRequired,
+  webformatURL: PropTypes.string.isRequired,
+  largeImageURL: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired,
 };

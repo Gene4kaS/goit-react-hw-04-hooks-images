@@ -1,49 +1,72 @@
 import { Component } from 'react';
+import { ToastContainer } from 'react-toastify';
 import Searchbar from './components/Searchbar';
 import ImageGallery from './components/ImageGallery';
-import s from './App.module.css';
 import Button from './components/Button';
 import Modal from './components/Modal';
 import Loader from './components/Loader';
+import Api from './components/Api';
 
-import fetchImages from './components/Api';
+import s from './App.module.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default class App extends Component {
   state = {
     images: [],
-    searchPic: '',
     queryName: '',
     page: 1,
     showModal: false,
-    isLoading: false,
+    error: null,
+    largeImageURL: '',
+    imageAlt: '',
+    status: 'idle',
   };
 
-  componentDidMount() {
-    const { state } = this;
-    this.setState({ isLoading: true });
-    if (state.images.length === 0) {
-      this.setState();
-      fetchImages('home', 1)
-        .then(array => {
-          this.setState({ images: array });
-        })
-        .catch(error => console.log(error));
+  handleFormSubmit = queryName => {
+    this.setState({
+      queryName: queryName,
+      page: 1,
+      images: [],
+    });
+  };
+
+  componentDidUpdate(prevProps, prevState) {
+    const prevqueryName = prevState.queryName;
+    const nextqueryName = this.state.queryName;
+
+    if (prevqueryName !== nextqueryName) {
+      this.setState({ status: 'pending' });
+      this.searchPic();
+    }
+    if (prevState.page !== this.state.page) {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: 'smooth',
+      });
     }
   }
 
-  getQuery = queryName => {
-    this.setState({ queryName: queryName });
+  searchPic = () => {
+    const { queryName, page } = this.state;
+    Api.fetchImages(queryName, page)
+      .then(array =>
+        this.setState(({ images, page }) => ({
+          images: [...images, ...array],
+          status: 'resolved',
+          page: page + 1,
+        })),
+      )
+      .catch(error => this.state({ error, status: 'rejected' }));
+  };
 
-    fetchImages(queryName, 1)
-      .then(array => {
-        this.setState(prevState => {
-          return { images: [...array], page: 1 };
-        });
-      })
-      .catch(error => console.log(error))
-      .finally(() => {
-        this.setState({ isLoading: false });
-      });
+  onLoadMore = () => {
+    this.searchPic();
+  };
+
+  onOpenModal = (url, alt) => {
+    this.setState({ largeImageURL: url, imageAlt: alt });
+
+    this.toggleModal();
   };
 
   toggleModal = () =>
@@ -51,31 +74,30 @@ export default class App extends Component {
       showModal: !showModal,
     }));
 
-  handleLargeURLImage = data => {
-    this.setState({ largeImageURL: data });
-    this.setState({ showModal: true });
-  };
-
   render() {
-    const { images, showModal, largeImageURL, isLoading } = this.state;
+    const { error, images, showModal, largeImageURL, imageAlt, status } =
+      this.state;
 
     return (
       <div className={s.App}>
-        <Searchbar onSubmit={this.getQuery} />
+        <Searchbar onSubmit={this.handleFormSubmit} />
         {images.length > 0 && (
           <ImageGallery
+            status={status}
             images={images}
-            handleLargeURLImage={this.handleLargeURLImage}
+            error={error}
+            onClick={this.onOpenModal}
+            onLoadMore={this.onLoadMore}
           />
         )}
-        {isLoading ? (
-          <Loader />
-        ) : (
-          images.length > 0 && <Button onClick={this.fetchImages} />
-        )}
         {showModal && (
-          <Modal onClose={this.toggleModal} largeImageURL={largeImageURL} />
+          <Modal
+            onClose={this.toggleModal}
+            src={largeImageURL}
+            alt={imageAlt}
+          />
         )}
+        <ToastContainer />
       </div>
     );
   }
