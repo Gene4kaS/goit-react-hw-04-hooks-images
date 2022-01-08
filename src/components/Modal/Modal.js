@@ -1,4 +1,4 @@
-import * as basicLightbox from 'basiclightbox';
+// import * as basicLightbox from 'basiclightbox';
 import React, { Component } from 'react';
 import s from './Modal.modul.css';
 
@@ -24,12 +24,18 @@ export default class Modal extends Component {
   };
   render() {
     const { src, alt } = this.props;
-    return basicLightbox.create(
+    return (
       <div className={s.Overlay} onClick={this.handleBackdropClick}>
         <div className={s.Modal}>
           <img src={src} alt={alt} />
         </div>
-      </div>,
+      </div>
     );
   }
 }
+
+// Modal.propTypes = {
+//   src: PropTypes.string,
+//   // alt: PropTypes.string,
+//   onCloseModal: PropTypes.func,
+// };

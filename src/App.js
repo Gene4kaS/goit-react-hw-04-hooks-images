@@ -2,9 +2,7 @@ import { Component } from 'react';
 import { ToastContainer } from 'react-toastify';
 import Searchbar from './components/Searchbar';
 import ImageGallery from './components/ImageGallery';
-import Button from './components/Button';
 import Modal from './components/Modal';
-import Loader from './components/Loader';
 import api from './components/Api';
 
 import s from './App.module.css';
@@ -63,7 +61,6 @@ export default class App extends Component {
 
   onOpenModal = (url, alt) => {
     this.setState({ largeImageURL: url, imageAlt: alt });
-
     this.toggleModal();
   };
 
@@ -87,9 +84,9 @@ export default class App extends Component {
         />
         {showModal && (
           <Modal
-            onCloseModal={this.toggleModal}
             src={largeImageURL}
             alt={imageAlt}
+            onCloseModal={this.toggleModal}
           />
         )}
         <ToastContainer />
