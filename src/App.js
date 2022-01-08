@@ -31,10 +31,7 @@ export default class App extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    const prevqueryName = prevState.queryName;
-    const nextqueryName = this.state.queryName;
-
-    if (prevqueryName !== nextqueryName) {
+    if (prevState.queryName !== this.state.queryName) {
       this.setState({ status: 'pending' });
       this.searchPic();
     }

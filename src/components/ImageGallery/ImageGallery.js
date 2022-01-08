@@ -36,7 +36,7 @@ export default class ImageGallery extends Component {
               />;
             })}
           </ul>
-          {<Button onLoadMore={this.props.onLoadMore} />}
+          {<Button onLoadMore={onLoadMore} />}
         </>
       );
     } else {
