@@ -1,4 +1,4 @@
-function fetchImages(page, queryName) {
+function fetchImages(queryName, page) {
   const API_KEY = '24210737-3b0bc435d65d70e1c06573fda';
   return fetch(
     `https://pixabay.com/api/?q=${queryName}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`,
