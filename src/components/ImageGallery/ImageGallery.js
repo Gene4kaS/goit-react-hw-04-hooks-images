@@ -26,14 +26,16 @@ export default class ImageGallery extends Component {
         <>
           <ul className={s.ImageGallery}>
             {images.map(({ id, tags, webformatURL, largeImageURL }) => {
-              <ImageGalleryItem
-                onClick={this.handleImageClick}
-                id={id}
-                key={id}
-                tags={tags}
-                webformatURL={webformatURL}
-                largeImageURL={largeImageURL}
-              />;
+              return (
+                <ImageGalleryItem
+                  onClick={this.handleImageClick}
+                  id={id}
+                  key={id}
+                  tags={tags}
+                  webformatURL={webformatURL}
+                  largeImageURL={largeImageURL}
+                />
+              );
             })}
           </ul>
           {<Button onLoadMore={onLoadMore} />}
