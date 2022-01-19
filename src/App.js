@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ToastContainer } from 'react-toastify';
 import Searchbar from './components/Searchbar';
 import ImageGallery from './components/ImageGallery';
@@ -8,91 +8,79 @@ import api from './components/Api';
 import s from './App.module.css';
 import 'react-toastify/dist/ReactToastify.css';
 
-export default class App extends Component {
-  state = {
-    images: [],
-    queryName: '',
-    page: 1,
-    showModal: false,
-    error: null,
-    largeImageURL: '',
-    imageAlt: '',
-    status: 'idle',
+export default function App() {
+  const [images, setImages] = useState([]);
+  const [queryName, setQueryName] = useState('');
+  const [page, setPage] = useState(1);
+  const [showModal, setShowModal] = useState(false);
+  const [error, setError] = useState(null);
+  const [largeImageURL, setLargeImageURL] = useState('');
+  const [imageAlt, setImageAlt] = useState('');
+  const [status, setStatus] = useState('idle');
+
+  const handleFormSubmit = queryName => {
+    setQueryName(queryName);
+    setPage(page);
+    setImages(images);
   };
 
-  handleFormSubmit = queryName => {
-    this.setState({
-      queryName: queryName,
-      page: 1,
-      images: [],
-    });
-  };
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.queryName !== this.state.queryName) {
-      this.setState({ status: 'pending' });
-      this.searchPic();
+  useEffect(() => {
+    if (queryName !== '') {
+      setStatus('pending');
+      searchPic();
     }
-    if (prevState.page !== this.state.page) {
+    if (page !== setPage) {
       window.scrollTo({
         top: document.documentElement.scrollHeight,
         behavior: 'smooth',
       });
     }
-  }
+  }, [queryName]);
 
-  searchPic = () => {
-    const { queryName, page } = this.state;
+  const searchPic = () => {
     api
       .fetchImages(queryName, page)
-      .then(res =>
-        this.setState(({ images, page }) => ({
-          images: [...images, ...res],
-          status: 'resolved',
-          page: page + 1,
-        })),
-      )
-      .catch(error => this.state({ error, status: 'rejected' }));
+      .then(res => {
+        setImages([...images, ...res]);
+        setStatus('resolved');
+        setPage(page => page + 1);
+      })
+      .catch(error => {
+        setError(error);
+        setStatus('rejected');
+      });
   };
 
-  onLoadMore = () => {
-    this.searchPic();
+  const onLoadMore = () => {
+    searchPic();
   };
 
-  onOpenModal = (url, alt) => {
-    this.setState({ largeImageURL: url, imageAlt: alt });
+  const onOpenModal = (url, alt) => {
+    setLargeImageURL(url);
+    setImageAlt(alt);
 
-    this.toggleModal();
+    toggleModal();
   };
 
-  toggleModal = () => {
-    this.setState(({ showModal }) => ({ showModal: !showModal }));
+  const toggleModal = () => {
+    setShowModal(showModal => !showModal);
   };
 
-  render() {
-    const { error, images, showModal, largeImageURL, imageAlt, status } =
-      this.state;
+  return (
+    <div className={s.App}>
+      {showModal && (
+        <Modal src={largeImageURL} alt={imageAlt} onCloseModal={toggleModal} />
+      )}
+      <Searchbar onSubmit={handleFormSubmit} />
+      <ImageGallery
+        status={status}
+        error={error}
+        images={images}
+        onClick={onOpenModal}
+        onLoadMore={onLoadMore}
+      />
 
-    return (
-      <div className={s.App}>
-        {showModal && (
-          <Modal
-            src={largeImageURL}
-            alt={imageAlt}
-            onCloseModal={this.toggleModal}
-          />
-        )}
-        <Searchbar onSubmit={this.handleFormSubmit} />
-        <ImageGallery
-          status={status}
-          error={error}
-          images={images}
-          onClick={this.onOpenModal}
-          onLoadMore={this.onLoadMore}
-        />
-
-        <ToastContainer />
-      </div>
-    );
-  }
+      <ToastContainer />
+    </div>
+  );
 }
